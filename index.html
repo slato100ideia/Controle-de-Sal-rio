@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Salário</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #111;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+
+        header {
+            background-color: #1c1c1c;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            color: white;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin: 12px 0;
+            border: 1px solid #333;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+        }
+
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #3498db;
+        }
+
+        .results {
+            margin-top: 20px;
+            text-align: left;
+            color: white;
+        }
+
+        .results p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .account-list {
+            margin: 20px 0;
+        }
+
+        .account-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .account-list input {
+            width: 75%;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #333;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .account-list button {
+            width: 20%;
+            background-color: #e74c3c;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .account-list button:hover {
+            background-color: #c0392b;
+        }
+
+        .divider {
+            margin: 30px 0;
+            border-top: 1px solid #333;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            input[type="number"] {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px 16px;
+            }
+
+            .account-list input {
+                width: 70%;
+                font-size: 14px;
+            }
+
+            .account-list button {
+                width: 25%;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Controle de Salário Pessoal</h1>
+    </header>
+
+    <div class="container">
+        <h2>Informe seu Salário Total</h2>
+        <input type="number" id="salario" placeholder="Digite seu salário total" oninput="calcularDivisao()">
+
+        <h3>Divisão do Salário:</h3>
+        <div class="results">
+            <p>Investimento: R$ <span id="investimento">0</span></p>
+            <p>Passeio: R$ <span id="passeio">0</span></p>
+            <p>Alimento e Contas: R$ <span id="alimento-conta">0</span></p>
+        </div>
+
+        <div class="divider"></div>
+
+        <h3>Adicione suas Contas</h3>
+        <div class="account-list" id="account-list">
+            <div class="account-item">
+                <input type="number" placeholder="Digite o valor da conta" class="conta">
+                <button onclick="removerConta(this)">Remover</button>
+            </div>
+        </div>
+        <button onclick="adicionarConta()">Adicionar Mais Contas</button>
+
+        <div class="divider"></div>
+
+        <button onclick="calcular()">Calcular Total</button>
+
+        <div class="results">
+            <h3>Resultado</h3>
+            <p>Valor total das contas: R$ <span id="total-contas">0</span></p>
+            <p>Porcentagem das contas em relação ao salário: <span id="porcentagem">0</span>%</p>
+        </div>
+    </div>
+
+    <script>
+        function calcularDivisao() {
+            const salario = parseFloat(document.getElementById('salario').value);
+            if (!isNaN(salario)) {
+                const investimento = salario * 0.25;
+                const passeio = salario * 0.25;
+                const alimentoConta = salario * 0.50;
+
+                document.getElementById('investimento').innerText = investimento.toFixed(2);
+                document.getElementById('passeio').innerText = passeio.toFixed(2);
+                document.getElementById('alimento-conta').innerText = alimentoConta.toFixed(2);
+            }
+        }
+
+        function adicionarConta() {
+            const lista = document.getElementById('account-list');
+            const div = document.createElement('div');
+            div.className = 'account-item';
+            div.innerHTML = `
+                <input type="number" placeholder="Digite o valor da conta" class="conta">
+                <button onclick="removerConta(this)">Remover</button>
+            `;
+            lista.appendChild(div);
+        }
+
+        function removerConta(botao) {
+            botao.parentNode.remove();
+        }
+
+        function calcular() {
+            const salario = parseFloat(document.getElementById('salario').value);
+            const contas = document.querySelectorAll('.conta');
+            let totalContas = 0;
+
+            contas.forEach(conta => {
+                const valor = parseFloat(conta.value);
+                if (!isNaN(valor)) {
+                    totalContas += valor;
+                }
+            });
+
+            if (!isNaN(salario)) {
+                const porcentagem = (totalContas / salario) * 100;
+
+                document.getElementById('total-contas').innerText = totalContas.toFixed(2);
+                document.getElementById('porcentagem').innerText = porcentagem.toFixed(2);
+            }
+        }
+    </script>
+
+</body>
+</html>
